@@ -4,6 +4,7 @@ import { Hero } from "@/components/sections/hero";
 import { Projects } from "@/components/sections/projects";
 import { Skills } from "@/components/sections/skills";
 import { Experience } from "@/components/sections/experience";
+import { ProfessionalWork } from "@/components/sections/professional-work";
 import { Education } from "@/components/sections/education";
 import { SettleIn } from "@/components/ui/settle-in";
 
@@ -19,6 +20,8 @@ export default function Home() {
         <Skills />
 
         <Experience />
+
+        <ProfessionalWork />
 
         <Education />
 

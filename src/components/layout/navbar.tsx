@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "motion/react";
-import { siteProfile } from "@/content/data";
+import { profile } from "@/content/data";
 import { GithubIcon } from "@/components/ui/icons";
 
 const NAV_LINKS = [
@@ -42,7 +42,7 @@ export function Navbar() {
         ))}
       </ul>
       <a
-        href={siteProfile.githubUrl}
+        href={profile.github}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Don Davis on GitHub"

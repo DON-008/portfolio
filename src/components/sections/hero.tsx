@@ -1,5 +1,5 @@
 import { ArrowRight, Download } from "lucide-react";
-import { siteProfile } from "@/content/data";
+import { profile } from "@/content/data";
 import { SettleIn } from "@/components/ui/settle-in";
 import { GithubIcon } from "@/components/ui/icons";
 import { HeroConstellation } from "./hero-constellation";
@@ -16,14 +16,14 @@ export function Hero() {
       <div className="relative z-10 flex max-w-2xl flex-col items-center gap-6">
         <SettleIn>
           <p className="font-mono text-sm uppercase tracking-widest text-teal">
-            {siteProfile.eyebrow}
+            {profile.eyebrow}
           </p>
         </SettleIn>
 
-        <HeroTitle name={siteProfile.name} role={siteProfile.role} />
+        <HeroTitle name={profile.name} role={profile.role} />
 
         <SettleIn delay={0.15}>
-          <p className="max-w-xl font-sans text-lg text-muted">{siteProfile.pitch}</p>
+          <p className="max-w-xl font-sans text-lg text-muted">{profile.pitch}</p>
         </SettleIn>
 
         <SettleIn delay={0.3}>
@@ -36,7 +36,7 @@ export function Hero() {
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
             <a
-              href={siteProfile.cvUrl}
+              href={profile.cvPath}
               download
               className="inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 font-sans text-sm text-text transition-colors hover:border-indigo focus-visible:border-indigo"
             >
@@ -44,7 +44,7 @@ export function Hero() {
               <Download className="h-4 w-4" aria-hidden="true" />
             </a>
             <a
-              href={siteProfile.githubUrl}
+              href={profile.github}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 font-sans text-sm text-text transition-colors hover:border-indigo focus-visible:border-indigo"

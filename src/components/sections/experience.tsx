@@ -1,4 +1,4 @@
-import { experience } from "@/content/data";
+import { experience, profile } from "@/content/data";
 import { SettleIn } from "@/components/ui/settle-in";
 import { Timeline } from "@/components/ui/timeline";
 
@@ -15,7 +15,12 @@ export function Experience() {
       className="scroll-mt-28 flex min-h-[50vh] flex-col items-center gap-10 px-6 py-24"
     >
       <SettleIn>
-        <h2 className="font-display text-2xl text-text">Experience</h2>
+        <div className="flex flex-col items-center gap-2">
+          <p className="font-mono text-sm uppercase tracking-widest text-teal">
+            {profile.totalExperience}
+          </p>
+          <h2 className="font-display text-2xl text-text">Experience</h2>
+        </div>
       </SettleIn>
 
       <Timeline items={items} />
