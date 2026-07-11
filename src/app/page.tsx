@@ -6,7 +6,7 @@ import { Skills } from "@/components/sections/skills";
 import { Experience } from "@/components/sections/experience";
 import { ProfessionalWork } from "@/components/sections/professional-work";
 import { Education } from "@/components/sections/education";
-import { SettleIn } from "@/components/ui/settle-in";
+import { Contact } from "@/components/sections/contact";
 
 export default function Home() {
   return (
@@ -25,14 +25,7 @@ export default function Home() {
 
         <Education />
 
-        <section
-          id="contact"
-          className="scroll-mt-28 flex min-h-[40vh] flex-col items-center justify-center gap-4 px-6 py-24"
-        >
-          <SettleIn>
-            <h2 className="font-display text-2xl text-text">Contact</h2>
-          </SettleIn>
-        </section>
+        <Contact />
       </main>
       <Footer />
     </>
