@@ -10,12 +10,39 @@ interface ConstellationNode {
   label: string;
 }
 
+// Nodes sit on a true circle (equidistant from center) for a spherical,
+// orbit-like silhouette rather than a stretched diamond.
+const CENTER = { x: 400, y: 230 };
+const ORBIT_RADIUS = 165;
+
+function onOrbit(angleDeg: number) {
+  const angle = (angleDeg * Math.PI) / 180;
+  return {
+    x: Math.round(CENTER.x + ORBIT_RADIUS * Math.cos(angle)),
+    y: Math.round(CENTER.y + ORBIT_RADIUS * Math.sin(angle)),
+  };
+}
+
 const NODES: ConstellationNode[] = [
-  { id: "template", x: 400, y: 90, color: "teal", label: "template" },
-  { id: "store", x: 640, y: 230, color: "indigo", label: "store" },
-  { id: "effect", x: 400, y: 370, color: "teal", label: "effect" },
-  { id: "api", x: 160, y: 230, color: "indigo", label: "api" },
+  { id: "template", ...onOrbit(-90), color: "teal", label: "template" },
+  { id: "store", ...onOrbit(0), color: "indigo", label: "store" },
+  { id: "effect", ...onOrbit(90), color: "teal", label: "effect" },
+  { id: "api", ...onOrbit(180), color: "indigo", label: "api" },
 ];
+
+// Deterministic (no Math.random — SSR/hydration-safe) circular drift path,
+// sampled at enough points that linear interpolation reads as a smooth
+// orbit rather than a boxy back-and-forth.
+function orbitalDrift(radius: number, steps = 12) {
+  const x: number[] = [];
+  const y: number[] = [];
+  for (let i = 0; i <= steps; i++) {
+    const angle = (i / steps) * Math.PI * 2;
+    x.push(Number((radius * Math.cos(angle)).toFixed(2)));
+    y.push(Number((radius * Math.sin(angle)).toFixed(2)));
+  }
+  return { x, y };
+}
 
 // template -> store -> effect -> api -> (back) -> template, per tech doc §4.5
 const EDGES: [string, string][] = [
@@ -122,45 +149,43 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
         back
       </text>
 
-      {NODES.map((node, index) => (
-        <motion.g
-          key={node.id}
-          animate={
-            animated
-              ? { y: [0, -4, 0, 4, 0], x: [0, 2, 0, -2, 0] }
-              : undefined
-          }
-          transition={
-            animated
-              ? {
-                  duration: 7 + (index % 3) * 1.5,
-                  delay: index * 0.6,
-                  repeat: Infinity,
-                  repeatType: "mirror",
-                  ease: "easeInOut",
-                }
-              : undefined
-          }
-        >
-          <circle
-            cx={node.x}
-            cy={node.y}
-            r={7}
-            fill={`var(--color-${node.color})`}
-            filter="url(#node-glow)"
-            opacity={0.85}
-          />
-          <text
-            x={node.x}
-            y={node.y - 26}
-            textAnchor="middle"
-            className="fill-muted font-mono text-[22px] uppercase tracking-wide"
-            opacity={isStandalone ? 0.9 : 0.8}
+      {NODES.map((node, index) => {
+        const drift = orbitalDrift(4 + (index % 2));
+        return (
+          <motion.g
+            key={node.id}
+            animate={animated ? { x: drift.x, y: drift.y } : undefined}
+            transition={
+              animated
+                ? {
+                    duration: 9 + (index % 3) * 2,
+                    delay: index * 0.6,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }
+                : undefined
+            }
           >
-            {node.label}
-          </text>
-        </motion.g>
-      ))}
+            <circle
+              cx={node.x}
+              cy={node.y}
+              r={7}
+              fill={`var(--color-${node.color})`}
+              filter="url(#node-glow)"
+              opacity={0.85}
+            />
+            <text
+              x={node.x}
+              y={node.y - 26}
+              textAnchor="middle"
+              className="fill-muted font-mono text-[22px] uppercase tracking-wide"
+              opacity={isStandalone ? 0.9 : 0.8}
+            >
+              {node.label}
+            </text>
+          </motion.g>
+        );
+      })}
     </svg>
   );
 }
