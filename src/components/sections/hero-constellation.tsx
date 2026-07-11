@@ -53,7 +53,7 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
       className={
         isStandalone
           ? "mx-auto h-64 w-full max-w-2xl"
-          : "pointer-events-none absolute inset-0 mx-auto h-full w-full max-w-4xl"
+          : "pointer-events-none mx-auto h-40 w-full max-w-xl sm:h-48 lg:h-56"
       }
     >
       <defs>
