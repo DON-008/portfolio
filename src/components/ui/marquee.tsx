@@ -12,8 +12,12 @@ interface MarqueeProps {
 // Aceternity-style marquee, adapted to our tokens. Duplicates the item list
 // once and loops x from 0% to -50% so the seam is invisible. Pauses under
 // reduced motion via the ancestor MotionConfig, same as every other primitive.
-export function Marquee({ items, duration = 28, className }: MarqueeProps) {
+// Speed defaults to ~3s of screen time per item so it stays readable however
+// many items are passed in, rather than a fixed duration that gets faster
+// (and less readable) every time the item list grows.
+export function Marquee({ items, duration, className }: MarqueeProps) {
   const track = [...items, ...items];
+  const effectiveDuration = duration ?? items.length * 3;
 
   return (
     <div
@@ -25,7 +29,7 @@ export function Marquee({ items, duration = 28, className }: MarqueeProps) {
       <motion.div
         className="flex w-max gap-10"
         animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: effectiveDuration, repeat: Infinity, ease: "linear" }}
       >
         {track.map((item, i) => (
           <span
