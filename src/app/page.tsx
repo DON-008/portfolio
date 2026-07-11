@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/sections/hero";
 import { Projects } from "@/components/sections/projects";
+import { Skills } from "@/components/sections/skills";
 import { SettleIn } from "@/components/ui/settle-in";
 
 export default function Home() {
@@ -13,14 +14,7 @@ export default function Home() {
 
         <Projects />
 
-        <section
-          id="skills"
-          className="scroll-mt-28 flex min-h-[50vh] flex-col items-center justify-center gap-4 px-6 py-24"
-        >
-          <SettleIn>
-            <h2 className="font-display text-2xl text-text">Skills</h2>
-          </SettleIn>
-        </section>
+        <Skills />
 
         <section
           id="experience"
