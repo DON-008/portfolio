@@ -23,11 +23,11 @@ export interface Profile {
 
 export const profile: Profile = {
   name: "Don Davis",
-  role: "Angular Developer",
+  role: "Frontend Engineer",
   eyebrow: "ANGULAR · TYPESCRIPT · RXJS · NGRX",
   pitch:
-    "Angular Developer with 5+ years in software development — 4 of them focused on Angular (v10–v22), TypeScript, RxJS and NgRx — building responsive, high-performance web applications from reactive state architecture and JWT auth flows to Core Web Vitals optimization.",
-  totalExperience: "5+ years · 4 companies",
+    "Frontend Engineer with 5+ years in software development —  focused on Angular (v10–v22), TypeScript, RxJS and NgRx — building responsive, high-performance web applications from reactive state architecture and JWT auth flows to Core Web Vitals optimization.",
+  totalExperience: "5+ years",
   location: "Kochi, Kerala, India",
   email: "dondavis.davis55@gmail.com",
   // Phone number is intentionally OMITTED from the site (CV-only, per Don).
@@ -119,8 +119,9 @@ export const projects: Project[] = [
     name: "PulseTicker",
     tagline:
       "Real-time cryptocurrency market dashboard streaming Binance WebSocket data — no backend, no API key.",
-    status: "in-development",
-    repoUrl: "TODO: PulseTicker repo URL",
+    status: "live",
+    liveUrl: "https://pulseticker-flame.vercel.app",
+    repoUrl: "https://github.com/DON-008/pulseticker",
     stack: ["Angular 22", "Signals", "RxJS", "WebSocket", "Binance streams"],
     highlight:
       "WebSocket backpressure handled with bufferTime/auditTime between socket messages and signal writes to prevent rendering thrash.",
@@ -142,7 +143,7 @@ export const projects: Project[] = [
         body: "Consuming public streams directly keeps the project deployable anywhere as a static site and makes the reactive architecture the entire story.",
       },
     ],
-    featured: false,
+    featured: true,
   },
 ];
 
