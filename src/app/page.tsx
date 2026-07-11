@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { Hero } from "@/components/sections/hero";
 import { Drift } from "@/components/ui/drift";
 import { SettleIn } from "@/components/ui/settle-in";
 
@@ -8,22 +9,7 @@ export default function Home() {
     <>
       <Navbar />
       <main className="relative z-10">
-        <section
-          id="hero"
-          className="scroll-mt-28 flex min-h-screen flex-col items-center justify-center gap-4 p-8 text-center"
-        >
-          {/* Step 2 token-check placeholder — replaced by the real hero in Step 5 */}
-          <p className="font-mono text-sm uppercase tracking-widest text-teal">
-            angular · typescript · ngrx
-          </p>
-          <h1 className="font-display text-4xl font-semibold text-text sm:text-6xl">
-            Zero Gravity — token check
-          </h1>
-          <p className="max-w-xl font-sans text-muted">
-            Space Grotesk display, Inter body, JetBrains Mono labels. Void
-            background, panel surface below, indigo / teal / amber accents.
-          </p>
-        </section>
+        <Hero />
 
         <section
           id="projects"
