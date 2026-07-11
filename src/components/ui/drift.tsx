@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 interface DriftProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   /** Oscillation amplitude in px. Spec ceiling: 8. */
   amplitude?: number;

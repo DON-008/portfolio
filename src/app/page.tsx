@@ -3,6 +3,8 @@ import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/sections/hero";
 import { Projects } from "@/components/sections/projects";
 import { Skills } from "@/components/sections/skills";
+import { Experience } from "@/components/sections/experience";
+import { Education } from "@/components/sections/education";
 import { SettleIn } from "@/components/ui/settle-in";
 
 export default function Home() {
@@ -16,23 +18,9 @@ export default function Home() {
 
         <Skills />
 
-        <section
-          id="experience"
-          className="scroll-mt-28 flex min-h-[50vh] flex-col items-center justify-center gap-4 px-6 py-24"
-        >
-          <SettleIn>
-            <h2 className="font-display text-2xl text-text">Experience</h2>
-          </SettleIn>
-        </section>
+        <Experience />
 
-        <section
-          id="education"
-          className="scroll-mt-28 flex min-h-[30vh] flex-col items-center justify-center gap-4 px-6 py-24"
-        >
-          <SettleIn>
-            <h2 className="font-display text-2xl text-text">Education</h2>
-          </SettleIn>
-        </section>
+        <Education />
 
         <section
           id="contact"
