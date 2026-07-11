@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, ArrowRight } from "lucide-react";
 import { GithubIcon } from "@/components/ui/icons";
@@ -18,6 +19,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <div className="flex h-full flex-col gap-4">
+      {project.screenshot && (
+        <Image
+          src={project.screenshot}
+          alt={`${project.name} screenshot`}
+          width={800}
+          height={450}
+          className="rounded-lg border border-line"
+        />
+      )}
+
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-display text-xl text-text">{project.name}</h3>
         {project.status === "in-development" && (

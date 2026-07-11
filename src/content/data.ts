@@ -55,6 +55,9 @@ export interface Project {
   architecture: string[];
   decisions: { title: string; body: string }[];
   featured: boolean;
+  // TODO: no real screenshots supplied yet (tech doc §6/§11 flag: never
+  // invent these). Path to /public/images/<slug>.png once Don provides one.
+  screenshot?: string;
 }
 
 export const projects: Project[] = [

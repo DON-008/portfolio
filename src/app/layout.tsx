@@ -4,6 +4,8 @@ import { MotionConfig } from "motion/react";
 import { SpaceBackground } from "@/components/ui/space-background";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { profile } from "@/content/data";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -24,9 +26,27 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const title = `${profile.name} — ${profile.role}`;
+
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Personal developer portfolio.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: title,
+    template: `%s — ${profile.name}`,
+  },
+  description: profile.pitch,
+  openGraph: {
+    title,
+    description: profile.pitch,
+    url: SITE_URL,
+    siteName: profile.name,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description: profile.pitch,
+  },
 };
 
 export default function RootLayout({

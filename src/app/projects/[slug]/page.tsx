@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
@@ -44,6 +45,15 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
       </Link>
 
       <header className="flex flex-col gap-4">
+        {project.screenshot && (
+          <Image
+            src={project.screenshot}
+            alt={`${project.name} screenshot`}
+            width={1200}
+            height={675}
+            className="rounded-xl border border-line"
+          />
+        )}
         {project.status === "in-development" && (
           <span className="w-fit rounded-full bg-amber/15 px-2.5 py-1 font-mono text-[10px] tracking-wide text-amber uppercase">
             In development
