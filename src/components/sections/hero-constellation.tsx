@@ -53,7 +53,7 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
       className={
         isStandalone
           ? "mx-auto h-64 w-full max-w-2xl"
-          : "pointer-events-none mx-auto h-40 w-full max-w-xl sm:h-48 lg:h-56"
+          : "pointer-events-none h-72 w-full max-w-md shrink-0 sm:h-80 lg:h-[26rem] lg:max-w-lg"
       }
     >
       <defs>
@@ -77,8 +77,8 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
             x2={to.x}
             y2={to.y}
             stroke="var(--color-line)"
-            strokeWidth={1}
-            strokeOpacity={isStandalone ? 0.8 : 0.5}
+            strokeWidth={1.5}
+            strokeOpacity={isStandalone ? 0.8 : 0.65}
             initial={animated ? { pathLength: 0 } : undefined}
             animate={animated ? { pathLength: 1 } : undefined}
             transition={
@@ -98,7 +98,7 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
           return (
             <motion.circle
               key={`pulse-${fromId}-${toId}`}
-              r={2.5}
+              r={4}
               className="fill-teal"
               initial={{ cx: from.x, cy: from.y, opacity: 0 }}
               animate={{ cx: [from.x, to.x], cy: [from.y, to.y], opacity: [0, 1, 1, 0] }}
@@ -116,8 +116,8 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
       <text
         x={backMidpoint.x}
         y={backMidpoint.y}
-        className="fill-muted font-mono text-[10px] uppercase tracking-wide"
-        opacity={0.5}
+        className="fill-muted font-mono text-[20px] uppercase tracking-wide"
+        opacity={0.65}
       >
         back
       </text>
@@ -145,17 +145,17 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
           <circle
             cx={node.x}
             cy={node.y}
-            r={4}
+            r={7}
             fill={`var(--color-${node.color})`}
             filter="url(#node-glow)"
-            opacity={0.7}
+            opacity={0.85}
           />
           <text
             x={node.x}
-            y={node.y - 18}
+            y={node.y - 26}
             textAnchor="middle"
-            className="fill-muted font-mono text-[10px] uppercase tracking-wide"
-            opacity={isStandalone ? 0.85 : 0.55}
+            className="fill-muted font-mono text-[22px] uppercase tracking-wide"
+            opacity={isStandalone ? 0.9 : 0.8}
           >
             {node.label}
           </text>
