@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/sections/hero";
-import { Drift } from "@/components/ui/drift";
+import { Projects } from "@/components/sections/projects";
 import { SettleIn } from "@/components/ui/settle-in";
 
 export default function Home() {
@@ -11,34 +11,7 @@ export default function Home() {
       <main className="relative z-10">
         <Hero />
 
-        <section
-          id="projects"
-          className="scroll-mt-28 flex min-h-[60vh] flex-col items-center gap-8 px-6 py-24"
-        >
-          <SettleIn>
-            <h2 className="font-display text-2xl text-text">Projects</h2>
-          </SettleIn>
-          {/* Drift primitive check — two test cards, desynced amplitude/duration,
-              dock on hover. Replaced by the real bento grid in Step 6. */}
-          <div className="flex flex-wrap justify-center gap-6">
-            <Drift
-              amplitude={6}
-              duration={7}
-              delay={0}
-              className="rounded-xl border border-line bg-panel/80 p-6 text-sm text-text"
-            >
-              Drift test card A
-            </Drift>
-            <Drift
-              amplitude={7}
-              duration={9.5}
-              delay={1.5}
-              className="rounded-xl border border-line bg-panel/80 p-6 text-sm text-text"
-            >
-              Drift test card B
-            </Drift>
-          </div>
-        </section>
+        <Projects />
 
         <section
           id="skills"
