@@ -143,7 +143,7 @@ export const projects: Project[] = [
         body: "Consuming public streams directly keeps the project deployable anywhere as a static site and makes the reactive architecture the entire story.",
       },
     ],
-    featured: true,
+    featured: false,
   },
 ];
 

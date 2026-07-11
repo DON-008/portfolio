@@ -23,7 +23,7 @@ export function Projects() {
             delay={(index % 5) * 0.4}
             className={cn(
               "rounded-xl border border-line bg-panel/80 p-6 backdrop-blur",
-              project.featured && "col-span-full"
+              project.featured && "sm:col-span-2 lg:col-span-2"
             )}
           >
             <ProjectCard project={project} />
