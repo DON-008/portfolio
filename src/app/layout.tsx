@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import { MotionConfig } from "motion/react";
 import { SpaceBackground } from "@/components/ui/space-background";
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -39,7 +41,9 @@ export default function RootLayout({
       >
         <MotionConfig reducedMotion="user">
           <SpaceBackground />
+          <Navbar />
           {children}
+          <Footer />
         </MotionConfig>
       </body>
     </html>

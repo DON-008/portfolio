@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 
 // Two tiled dot-field layers (different density/size) built from stacked
 // radial-gradient point-lights, repeated via background-size — no canvas,
@@ -45,6 +45,13 @@ const TWINKLE_STARS: TwinkleStar[] = [
 ];
 
 export function SpaceBackground() {
+  const { scrollY } = useScroll();
+  // Nearer (denser) layer moves more, farther layer moves less — per §4.3,
+  // ~0.3x and ~0.15x of scroll speed. Transform-only, event-driven (not a
+  // per-frame loop), so idle CPU is unaffected.
+  const nearY = useTransform(scrollY, (v) => v * 0.3);
+  const farY = useTransform(scrollY, (v) => v * 0.15);
+
   return (
     <div
       aria-hidden="true"
@@ -55,14 +62,14 @@ export function SpaceBackground() {
       <div className="absolute top-1/3 -right-1/4 h-[50vw] w-[50vw] rounded-full bg-teal opacity-[0.07] blur-3xl" />
       <div className="absolute -bottom-1/4 left-1/3 h-[45vw] w-[45vw] rounded-full bg-indigo opacity-[0.06] blur-3xl" />
 
-      {/* Starfield — two static tiled layers, different density */}
-      <div
+      {/* Starfield — two tiled layers, different density, subtle scroll parallax */}
+      <motion.div
         className="absolute inset-0 opacity-70"
-        style={{ backgroundImage: STARFIELD_NEAR, backgroundSize: "220px 220px" }}
+        style={{ backgroundImage: STARFIELD_NEAR, backgroundSize: "220px 220px", y: nearY }}
       />
-      <div
+      <motion.div
         className="absolute inset-0 opacity-50"
-        style={{ backgroundImage: STARFIELD_FAR, backgroundSize: "320px 320px" }}
+        style={{ backgroundImage: STARFIELD_FAR, backgroundSize: "320px 320px", y: farY }}
       />
 
       {/* Twinkling stars — compositor-only opacity animation via Motion,

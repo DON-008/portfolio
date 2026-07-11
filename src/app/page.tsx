@@ -1,5 +1,3 @@
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/sections/hero";
 import { Projects } from "@/components/sections/projects";
 import { Skills } from "@/components/sections/skills";
@@ -10,24 +8,20 @@ import { Contact } from "@/components/sections/contact";
 
 export default function Home() {
   return (
-    <>
-      <Navbar />
-      <main className="relative z-10">
-        <Hero />
+    <main className="relative z-10">
+      <Hero />
 
-        <Projects />
+      <Projects />
 
-        <Skills />
+      <Skills />
 
-        <Experience />
+      <Experience />
 
-        <ProfessionalWork />
+      <ProfessionalWork />
 
-        <Education />
+      <Education />
 
-        <Contact />
-      </main>
-      <Footer />
-    </>
+      <Contact />
+    </main>
   );
 }

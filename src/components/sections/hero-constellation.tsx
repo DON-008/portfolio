@@ -1,5 +1,6 @@
-// Stubbed static per tech doc Step 5 — correct nodes/edges/labels, faint,
-// no draw/pulse/drift animation yet (that lands in Step 10).
+"use client";
+
+import { motion, useReducedMotion } from "motion/react";
 
 interface ConstellationNode {
   id: string;
@@ -28,7 +29,18 @@ function nodeById(id: string): ConstellationNode {
   return NODES.find((n) => n.id === id)!;
 }
 
-export function HeroConstellation() {
+interface HeroConstellationProps {
+  /** "background" (default): faint, full-bleed, animated hero backdrop.
+   *  "standalone": brighter, normal-flow, always static — for embedding
+   *  in the ESMP case-study page per tech doc §5.2. */
+  variant?: "background" | "standalone";
+}
+
+export function HeroConstellation({ variant = "background" }: HeroConstellationProps) {
+  const reducedMotion = useReducedMotion();
+  const isStandalone = variant === "standalone";
+  const animated = !isStandalone && !reducedMotion;
+
   const backMidpoint = {
     x: (nodeById("api").x + nodeById("template").x) / 2 - 24,
     y: (nodeById("api").y + nodeById("template").y) / 2 - 8,
@@ -38,7 +50,11 @@ export function HeroConstellation() {
     <svg
       aria-hidden="true"
       viewBox="0 0 800 460"
-      className="pointer-events-none absolute inset-0 mx-auto h-full w-full max-w-4xl"
+      className={
+        isStandalone
+          ? "mx-auto h-64 w-full max-w-2xl"
+          : "pointer-events-none absolute inset-0 mx-auto h-full w-full max-w-4xl"
+      }
     >
       <defs>
         <filter id="node-glow" x="-100%" y="-100%" width="300%" height="300%">
@@ -50,11 +66,11 @@ export function HeroConstellation() {
         </filter>
       </defs>
 
-      {EDGES.map(([fromId, toId]) => {
+      {EDGES.map(([fromId, toId], index) => {
         const from = nodeById(fromId);
         const to = nodeById(toId);
         return (
-          <line
+          <motion.line
             key={`${fromId}-${toId}`}
             x1={from.x}
             y1={from.y}
@@ -62,10 +78,40 @@ export function HeroConstellation() {
             y2={to.y}
             stroke="var(--color-line)"
             strokeWidth={1}
-            strokeOpacity={0.5}
+            strokeOpacity={isStandalone ? 0.8 : 0.5}
+            initial={animated ? { pathLength: 0 } : undefined}
+            animate={animated ? { pathLength: 1 } : undefined}
+            transition={
+              animated
+                ? { duration: 1, delay: 0.3 + index * 0.4, ease: "easeInOut" }
+                : undefined
+            }
           />
         );
       })}
+
+      {/* Periodic pulses of light traveling along an edge, per §4.5 */}
+      {animated &&
+        EDGES.map(([fromId, toId], index) => {
+          const from = nodeById(fromId);
+          const to = nodeById(toId);
+          return (
+            <motion.circle
+              key={`pulse-${fromId}-${toId}`}
+              r={2.5}
+              className="fill-teal"
+              initial={{ cx: from.x, cy: from.y, opacity: 0 }}
+              animate={{ cx: [from.x, to.x], cy: [from.y, to.y], opacity: [0, 1, 1, 0] }}
+              transition={{
+                duration: 1.8,
+                repeat: Infinity,
+                repeatDelay: 3 + index * 1.5,
+                delay: 2.5 + index * 1.6,
+                ease: "easeInOut",
+              }}
+            />
+          );
+        })}
 
       <text
         x={backMidpoint.x}
@@ -76,8 +122,26 @@ export function HeroConstellation() {
         back
       </text>
 
-      {NODES.map((node) => (
-        <g key={node.id}>
+      {NODES.map((node, index) => (
+        <motion.g
+          key={node.id}
+          animate={
+            animated
+              ? { y: [0, -4, 0, 4, 0], x: [0, 2, 0, -2, 0] }
+              : undefined
+          }
+          transition={
+            animated
+              ? {
+                  duration: 7 + (index % 3) * 1.5,
+                  delay: index * 0.6,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                  ease: "easeInOut",
+                }
+              : undefined
+          }
+        >
           <circle
             cx={node.x}
             cy={node.y}
@@ -91,11 +155,11 @@ export function HeroConstellation() {
             y={node.y - 18}
             textAnchor="middle"
             className="fill-muted font-mono text-[10px] uppercase tracking-wide"
-            opacity={0.55}
+            opacity={isStandalone ? 0.85 : 0.55}
           >
             {node.label}
           </text>
-        </g>
+        </motion.g>
       ))}
     </svg>
   );
