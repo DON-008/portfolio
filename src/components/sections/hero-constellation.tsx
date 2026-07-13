@@ -6,12 +6,14 @@ interface ConstellationNode {
   id: string;
   x: number;
   y: number;
+  angle: number;
   color: "teal" | "indigo";
   label: string;
 }
 
-// Nodes sit on a true circle (equidistant from center) for a spherical,
-// orbit-like silhouette rather than a stretched diamond.
+// Nodes sit on a true circle, connected by arcs along that same circle
+// (not straight chords) so the silhouette actually reads as a sphere/orbit
+// instead of the square a diamond of straight lines would trace.
 const CENTER = { x: 400, y: 230 };
 const ORBIT_RADIUS = 165;
 
@@ -24,11 +26,44 @@ function onOrbit(angleDeg: number) {
 }
 
 const NODES: ConstellationNode[] = [
-  { id: "template", ...onOrbit(-90), color: "teal", label: "template" },
-  { id: "store", ...onOrbit(0), color: "indigo", label: "store" },
-  { id: "effect", ...onOrbit(90), color: "teal", label: "effect" },
-  { id: "api", ...onOrbit(180), color: "indigo", label: "api" },
+  { id: "template", angle: -90, ...onOrbit(-90), color: "teal", label: "template" },
+  { id: "store", angle: 0, ...onOrbit(0), color: "indigo", label: "store" },
+  { id: "effect", angle: 90, ...onOrbit(90), color: "teal", label: "effect" },
+  { id: "api", angle: 180, ...onOrbit(180), color: "indigo", label: "api" },
 ];
+
+// template -> store -> effect -> api -> (back) -> template, per tech doc §4.5
+const EDGES: [string, string][] = [
+  ["template", "store"],
+  ["store", "effect"],
+  ["effect", "api"],
+  ["api", "template"],
+];
+
+function nodeById(id: string): ConstellationNode {
+  return NODES.find((n) => n.id === id)!;
+}
+
+// A quarter-circle arc along the shared orbit between two adjacent nodes
+// (SVG elliptical-arc command), not a straight chord between them.
+function arcPath(fromId: string, toId: string) {
+  const from = nodeById(fromId);
+  const to = nodeById(toId);
+  return `M ${from.x} ${from.y} A ${ORBIT_RADIUS} ${ORBIT_RADIUS} 0 0 1 ${to.x} ${to.y}`;
+}
+
+// Sample points along that same arc for the traveling pulse dot, so it
+// follows the curve rather than cutting straight across the circle.
+function arcPoints(fromAngle: number, toAngle: number, steps = 12) {
+  const x: number[] = [];
+  const y: number[] = [];
+  for (let i = 0; i <= steps; i++) {
+    const angle = ((fromAngle + ((toAngle - fromAngle) * i) / steps) * Math.PI) / 180;
+    x.push(Math.round(CENTER.x + ORBIT_RADIUS * Math.cos(angle)));
+    y.push(Math.round(CENTER.y + ORBIT_RADIUS * Math.sin(angle)));
+  }
+  return { x, y };
+}
 
 // Deterministic (no Math.random — SSR/hydration-safe) circular drift path,
 // sampled at enough points that linear interpolation reads as a smooth
@@ -44,18 +79,6 @@ function orbitalDrift(radius: number, steps = 12) {
   return { x, y };
 }
 
-// template -> store -> effect -> api -> (back) -> template, per tech doc §4.5
-const EDGES: [string, string][] = [
-  ["template", "store"],
-  ["store", "effect"],
-  ["effect", "api"],
-  ["api", "template"],
-];
-
-function nodeById(id: string): ConstellationNode {
-  return NODES.find((n) => n.id === id)!;
-}
-
 interface HeroConstellationProps {
   /** "background" (default): faint, full-bleed, animated hero backdrop.
    *  "standalone": brighter, normal-flow, always static — for embedding
@@ -68,9 +91,10 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
   const isStandalone = variant === "standalone";
   const animated = !isStandalone && !reducedMotion;
 
-  const backMidpoint = {
-    x: (nodeById("api").x + nodeById("template").x) / 2 - 24,
-    y: (nodeById("api").y + nodeById("template").y) / 2 - 8,
+  const backLabelAngle = ((180 + 270) / 2) * (Math.PI / 180);
+  const backLabel = {
+    x: CENTER.x + (ORBIT_RADIUS + 26) * Math.cos(backLabelAngle),
+    y: CENTER.y + (ORBIT_RADIUS + 26) * Math.sin(backLabelAngle),
   };
 
   return (
@@ -93,42 +117,49 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
         </filter>
       </defs>
 
-      {EDGES.map(([fromId, toId], index) => {
-        const from = nodeById(fromId);
-        const to = nodeById(toId);
-        return (
-          <motion.line
-            key={`${fromId}-${toId}`}
-            x1={from.x}
-            y1={from.y}
-            x2={to.x}
-            y2={to.y}
-            stroke="var(--color-line)"
-            strokeWidth={1.5}
-            strokeOpacity={isStandalone ? 0.8 : 0.65}
-            initial={animated ? { pathLength: 0 } : undefined}
-            animate={animated ? { pathLength: 1 } : undefined}
-            transition={
-              animated
-                ? { duration: 1, delay: 0.3 + index * 0.4, ease: "easeInOut" }
-                : undefined
-            }
-          />
-        );
-      })}
+      {/* Static orbit ring — makes the sphere/circle shape unmistakable
+          at a glance, independent of whether the edges have drawn in. */}
+      <circle
+        cx={CENTER.x}
+        cy={CENTER.y}
+        r={ORBIT_RADIUS}
+        fill="none"
+        stroke="var(--color-line)"
+        strokeWidth={1}
+        strokeOpacity={isStandalone ? 0.35 : 0.25}
+      />
 
-      {/* Periodic pulses of light traveling along an edge, per §4.5 */}
+      {EDGES.map(([fromId, toId], index) => (
+        <motion.path
+          key={`${fromId}-${toId}`}
+          d={arcPath(fromId, toId)}
+          fill="none"
+          stroke="var(--color-line)"
+          strokeWidth={1.5}
+          strokeOpacity={isStandalone ? 0.8 : 0.65}
+          initial={animated ? { pathLength: 0 } : undefined}
+          animate={animated ? { pathLength: 1 } : undefined}
+          transition={
+            animated
+              ? { duration: 1, delay: 0.3 + index * 0.4, ease: "easeInOut" }
+              : undefined
+          }
+        />
+      ))}
+
+      {/* Periodic pulses of light traveling along an edge's arc, per §4.5 */}
       {animated &&
         EDGES.map(([fromId, toId], index) => {
           const from = nodeById(fromId);
           const to = nodeById(toId);
+          const pulse = arcPoints(from.angle, to.angle);
           return (
             <motion.circle
               key={`pulse-${fromId}-${toId}`}
               r={4}
               className="fill-teal"
               initial={{ cx: from.x, cy: from.y, opacity: 0 }}
-              animate={{ cx: [from.x, to.x], cy: [from.y, to.y], opacity: [0, 1, 1, 0] }}
+              animate={{ cx: pulse.x, cy: pulse.y, opacity: [0, 1, 1, 1, 0] }}
               transition={{
                 duration: 1.8,
                 repeat: Infinity,
@@ -141,8 +172,9 @@ export function HeroConstellation({ variant = "background" }: HeroConstellationP
         })}
 
       <text
-        x={backMidpoint.x}
-        y={backMidpoint.y}
+        x={backLabel.x}
+        y={backLabel.y}
+        textAnchor="middle"
         className="fill-muted font-mono text-[20px] uppercase tracking-wide"
         opacity={0.65}
       >
